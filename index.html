@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ryan Horgan</title>
+<meta name="description" content="Ryan Horgan - enterprise sales engineer at Schneider Electric and solo builder of two production audio ML products, I.D. and ID.ai.">
+<meta name="author" content="Ryan Horgan">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ryan Horgan">
+<meta property="og:description" content="Ryan Horgan - enterprise sales engineer at Schneider Electric and solo builder of two production audio ML products, I.D. and ID.ai.">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+/* ============================================================
+   TOKENS
+   Palette solved for WCAG 2.1 AA: every text/background pair
+   clears 4.5:1. Type scale defined once, used everywhere.
+   ============================================================ */
+:root {
+  /* type scale */
+  --t-micro: .72rem;   /* uppercase mono micro-labels  ~11.5px */
+  --t-mono:  .76rem;   /* mono data values             ~12.2px */
+  --t-small: .875rem;  /* small body                     14px  */
+  --t-body:  .9rem;    /* story body                   ~14.4px */
+
+  --font-d: Georgia,'Times New Roman',serif;
+  --font-b: system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-m: 'Courier New',Courier,monospace;
+  --max: 1200px;
+  --px: clamp(1.5rem,6vw,5rem);
+
+  /* light palette (default)
+     Accents solved against the worst-case TINTED card, not the plain
+     background, so tinted panels can never erode them below 4.5:1. */
+  --bg:#f5f3ee; --bg-2:#edeae3; --bg-3:#e4e0d8;
+  --ink:#0d0c0a; --ink-2:#565450; --ink-3:#6b6864;
+  --viridian:#387260; --amber:#866010; --indigo:#6059b5;
+  --tint-vir:#eef4ed; --tint-amb:#f6f0e3; --tint-ind:#efedef;
+  --rule:#dedad3; --rule-2:#cbc6bd;
+  --gl:rgba(56,114,96,.07);
+  --nav-bg:rgba(245,243,238,.88);
+  --focus:#387260;
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0d0c0a; --bg-2:#141210; --bg-3:#1c1a16;
+    --ink:#f5f3ee; --ink-2:#a8a59f; --ink-3:#8e8b87;
+    --viridian:#4d9e85; --amber:#b78416; --indigo:#8178f4;
+    --tint-vir:#18241e; --tint-amb:#251d0c; --tint-ind:#191722;
+    --rule:#242018; --rule-2:#332f27;
+    --gl:rgba(77,158,133,.06);
+    --nav-bg:rgba(13,12,10,.88);
+    --focus:#4d9e85;
+  }
+}
+
+:root[data-theme="light"]{
+  --bg:#f5f3ee; --bg-2:#edeae3; --bg-3:#e4e0d8;
+  --ink:#0d0c0a; --ink-2:#565450; --ink-3:#6b6864;
+  --viridian:#387260; --amber:#866010; --indigo:#6059b5;
+  --tint-vir:#eef4ed; --tint-amb:#f6f0e3; --tint-ind:#efedef;
+  --rule:#dedad3; --rule-2:#cbc6bd;
+  --gl:rgba(56,114,96,.07);
+  --nav-bg:rgba(245,243,238,.88);
+  --focus:#387260;
+}
+
+:root[data-theme="dark"]{
+  --bg:#0d0c0a; --bg-2:#141210; --bg-3:#1c1a16;
+  --ink:#f5f3ee; --ink-2:#a8a59f; --ink-3:#8e8b87;
+  --viridian:#4d9e85; --amber:#b78416; --indigo:#8178f4;
+  --tint-vir:#18241e; --tint-amb:#251d0c; --tint-ind:#191722;
+  --rule:#242018; --rule-2:#332f27;
+  --gl:rgba(77,158,133,.06);
+  --nav-bg:rgba(13,12,10,.88);
+  --focus:#4d9e85;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-b);
+  font-size:16px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  transition:background .3s,color .3s;
+}
+
+/* shared micro-label treatment -- letter-spacing aids legibility at small mono sizes */
+.micro{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+/* ============================================================
+   GRID BACKGROUND -- Readymag editor-grid motif
+   ============================================================ */
+.grid-bg{
+  background-image:
+    repeating-linear-gradient(90deg,var(--gl) 0,var(--gl) 1px,
+      transparent 1px,transparent calc(100%/6)),
+    repeating-linear-gradient(0deg,var(--gl) 0,var(--gl) 1px,
+      transparent 1px,transparent 88px);
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+/* NOTE: scoped to a class, never the bare `nav` type selector --
+   the footer's link list is also a <nav> and would inherit position:fixed. */
+.site-nav{
+  position:fixed;
+  inset:0 0 auto 0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1.5rem;
+  padding:1.25rem var(--px);
+  border-bottom:1px solid transparent;
+  transition:background .35s,border-color .35s;
+}
+.site-nav.scrolled{
+  background:var(--nav-bg);
+  border-bottom-color:var(--rule);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+.nav-name{
+  font-family:var(--font-m);
+  font-size:var(--t-mono);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  text-decoration:none;
+}
+.nav-right{display:flex;align-items:center;gap:2.25rem}
+.nav-links{display:flex;gap:2.25rem;list-style:none}
+.nav-links a{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  text-decoration:none;
+  transition:color .15s;
+}
+.nav-links a:hover{color:var(--viridian)}
+
+.theme-btn{
+  background:none;
+  border:1px solid var(--rule-2);
+  color:var(--ink-3);
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  padding:.35em .75em;
+  cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+.theme-btn:hover{color:var(--viridian);border-color:var(--viridian)}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:8rem var(--px) 5.5rem;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid var(--rule);
+}
+.hero-name{
+  font-family:var(--font-d);
+  font-weight:400;
+  line-height:.88;
+  letter-spacing:-.04em;
+  margin-bottom:2.75rem;
+}
+.hero-name .first{
+  display:block;
+  font-size:clamp(3.5rem,8.5vw,8.5rem);
+  font-style:italic;
+  color:var(--viridian);
+}
+.hero-name .last{
+  display:block;
+  font-size:clamp(5rem,13.5vw,13.5rem);
+  color:var(--ink);
+}
+.hero-divider{
+  width:100%;height:2px;margin-bottom:2.75rem;
+  background:linear-gradient(90deg,
+    var(--viridian) 0%, var(--amber) 28%, var(--indigo) 52%,
+    var(--rule) 78%, var(--rule) 100%);
+}
+
+.hero-bottom{display:grid;grid-template-columns:1fr auto;gap:3rem;align-items:end}
+@media(max-width:720px){.hero-bottom{grid-template-columns:1fr}}
+
+.hero-tagline{
+  font-size:clamp(1rem,1.3vw,1.06rem);
+  line-height:1.78;
+  color:var(--ink-2);
+  max-width:52ch;
+}
+.hero-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1.5rem}
+@media(max-width:720px){
+  .hero-meta{align-items:flex-start;flex-direction:row;flex-wrap:wrap;gap:1.75rem 2.5rem;margin-top:2rem}
+}
+.meta-pair{display:flex;flex-direction:column;gap:.35rem;text-align:right}
+@media(max-width:720px){.meta-pair{text-align:left}}
+
+.meta-label{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+}
+.meta-value{font-size:var(--t-small);color:var(--ink-2)}
+.meta-value a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--rule-2)}
+.meta-value a:hover{color:var(--viridian);border-color:var(--viridian)}
+.meta-live{display:flex;align-items:center;justify-content:flex-end;gap:.5rem;color:var(--ink)}
+@media(max-width:720px){.meta-live{justify-content:flex-start}}
+
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--viridian);flex-shrink:0;animation:pulse 2.4s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.scroll-track{position:absolute;bottom:2.5rem;right:var(--px);display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.scroll-track span{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  writing-mode:vertical-rl;
+}
+.scroll-bar{width:1px;height:52px;background:var(--rule-2);position:relative;overflow:hidden}
+.scroll-bar::after{
+  content:'';position:absolute;top:-100%;left:0;
+  width:100%;height:50%;background:var(--viridian);
+  animation:drop 1.8s ease infinite;
+}
+@keyframes drop{0%{top:-50%}100%{top:100%}}
+@media(max-width:900px){.scroll-track{display:none}}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--px)}
+section{padding:7rem 0;border-bottom:1px solid var(--rule)}
+
+/* each section carries its own accent via --sec */
+#projects{--sec:var(--viridian)}
+#experience{--sec:var(--amber)}
+#skills{--sec:var(--indigo)}
+
+.sec-bar{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem}
+.sec-eye{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.24em;
+  text-transform:uppercase;
+  color:var(--sec);
+  white-space:nowrap;
+}
+.sec-rule{
+  height:2px;flex:1;
+  background:linear-gradient(90deg,var(--sec) 0%,var(--rule-2) 22%,var(--rule-2) 100%);
+}
+.sec-title{
+  font-family:var(--font-d);
+  font-size:clamp(2rem,3.5vw,3.2rem);
+  font-weight:400;
+  font-style:italic;
+  line-height:1.12;
+  letter-spacing:-.025em;
+  color:var(--ink);
+  text-wrap:balance;
+  margin-bottom:4.5rem;
+  max-width:24ch;
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.fade{
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .8s cubic-bezier(.25,.46,.45,.94),
+             transform .8s cubic-bezier(.25,.46,.45,.94);
+}
+.fade.in{opacity:1;transform:none}
+.fade[data-d="1"]{transition-delay:.1s}
+.fade[data-d="2"]{transition-delay:.2s}
+.fade[data-d="3"]{transition-delay:.3s}
+.fade[data-d="4"]{transition-delay:.4s}
+.fade[data-d="5"]{transition-delay:.5s}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .fade{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+
+/* ============================================================
+   PROJECTS
+   ============================================================ */
+/* Each project owns an accent identity. Everything inside reads --accent,
+   so re-theming a project is a one-line change on the container. */
+.project{--accent:var(--viridian); --tint:var(--tint-vir)}
+.project.is-amber{--accent:var(--amber); --tint:var(--tint-amb)}
+
+.project+.project{margin-top:4.5rem;padding-top:4.5rem;border-top:1px solid var(--rule)}
+.proj-row{display:grid;grid-template-columns:1fr 290px;gap:4rem;align-items:start}
+@media(max-width:900px){.proj-row{grid-template-columns:1fr;gap:2.5rem}}
+
+.proj-eye{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:.6rem;
+  padding-left:.75rem;
+  border-left:3px solid var(--accent);
+}
+.proj-title{
+  font-family:var(--font-d);
+  font-size:clamp(2rem,4vw,4rem);
+  font-weight:400;
+  font-style:italic;
+  line-height:1.02;
+  letter-spacing:-.03em;
+  color:var(--ink);
+  margin-bottom:.5rem;
+}
+.proj-url{
+  font-family:var(--font-m);
+  font-size:var(--t-mono);
+  color:var(--accent);
+  text-decoration:none;
+  letter-spacing:.04em;
+  display:inline-block;
+  margin-bottom:1.75rem;
+  border-bottom:1px solid transparent;
+  transition:border-color .15s;
+}
+.proj-url:hover{border-color:var(--accent)}
+.proj-pitch{font-size:1rem;line-height:1.8;color:var(--ink-2);max-width:60ch;margin-bottom:2.5rem}
+
+.story+.story{margin-top:1.85rem}
+.story-lbl{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:.5rem;
+}
+.story-txt{font-size:var(--t-body);line-height:1.85;color:var(--ink-2);max-width:64ch}
+.story-txt code{
+  font-family:var(--font-m);
+  font-size:.88em;
+  color:var(--accent);
+  background:var(--bg-2);
+  padding:.1em .38em;
+  border-radius:2px;
+}
+
+.proj-sidebar{display:flex;flex-direction:column;gap:1.25rem}
+.scard{background:var(--tint);border:1px solid var(--rule-2);padding:1.35rem;position:relative}
+.scard::before{
+  content:'';position:absolute;top:-1px;left:-1px;
+  width:14px;height:14px;
+  border-top:2px solid var(--accent);border-left:2px solid var(--accent);
+}
+.scard::after{
+  content:'';position:absolute;bottom:-1px;right:-1px;
+  width:14px;height:14px;
+  border-bottom:2px solid var(--accent);border-right:2px solid var(--accent);
+}
+.sc-lbl{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:1rem;
+}
+.status-row{display:flex;align-items:center;gap:.55rem;margin-bottom:.5rem}
+.status-row:last-child{margin-bottom:0}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.sv{font-family:var(--font-m);font-size:var(--t-mono);color:var(--ink-2);line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.chip{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.05em;
+  color:var(--ink-2);
+  background:var(--bg-2);
+  border:1px solid var(--rule-2);
+  padding:.24em .55em;
+  transition:color .15s,border-color .15s;
+}
+.chip:hover{color:var(--accent);border-color:var(--accent)}
+.spec-tbl{display:grid;grid-template-columns:auto 1fr;gap:.5rem 1rem;align-items:start}
+.sk{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  white-space:nowrap;
+}
+.sv2{font-family:var(--font-m);font-size:var(--t-mono);color:var(--ink-2);line-height:1.45}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+.timeline{position:relative;padding-left:2.25rem}
+.timeline::before{
+  content:'';position:absolute;left:0;top:.6rem;bottom:0;width:2px;
+  background:linear-gradient(180deg,
+    var(--viridian) 0%, var(--amber) 42%, var(--indigo) 72%, var(--rule-2) 100%);
+}
+.tl{position:relative;padding-bottom:3rem}
+.tl:last-child{padding-bottom:0}
+.tl{--tl-accent:var(--amber)}
+.tl.now{--tl-accent:var(--viridian)}
+.tl.edu{--tl-accent:var(--indigo)}
+.tl::before{
+  content:'';position:absolute;left:-2.25rem;top:.6rem;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--tl-accent);
+  transform:translateX(-4px);
+}
+.tl.now::before{background:var(--viridian);border-color:var(--viridian)}
+
+.tl-period{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  margin-bottom:.45rem;
+}
+.tl-role{font-family:var(--font-d);font-size:1.15rem;font-weight:400;color:var(--ink);line-height:1.25;margin-bottom:.25rem}
+.tl-org{font-family:var(--font-m);font-size:var(--t-mono);letter-spacing:.05em;color:var(--tl-accent);margin-bottom:.9rem}
+.tl-buls{list-style:none;display:flex;flex-direction:column;gap:.55rem;max-width:66ch}
+.tl-buls li{font-size:var(--t-small);line-height:1.7;color:var(--ink-2);padding-left:1.3rem;position:relative}
+.tl-buls li::before{content:'--';position:absolute;left:0;color:var(--ink-3)}
+.edu-badge{
+  display:inline-block;
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--indigo);
+  background:var(--tint-ind);
+  border:1px solid var(--indigo);
+  padding:.22em .65em;
+  margin-bottom:.85rem;
+}
+
+/* ============================================================
+   SKILLS
+   ============================================================ */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2.5rem 3rem}
+/* skill groups cycle the three accents so the grid reads as a set */
+.sg{--sg:var(--viridian)}
+.sg:nth-child(3n+2){--sg:var(--amber)}
+.sg:nth-child(3n+3){--sg:var(--indigo)}
+.sg-lbl{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--sg);
+  margin-bottom:1rem;
+  padding-bottom:.55rem;
+  border-bottom:2px solid var(--sg);
+}
+.sg-items{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.sg-items li{font-size:var(--t-small);color:var(--ink-2);line-height:1.45}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-l{font-family:var(--font-d);font-style:italic;font-size:.95rem;color:var(--ink-2)}
+.footer-links{display:flex;flex-wrap:wrap;gap:1.75rem}
+.footer-links a{
+  font-family:var(--font-m);
+  font-size:var(--t-micro);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-3);
+  text-decoration:none;
+  transition:color .15s;
+}
+.footer-links a:hover{color:var(--viridian)}
+
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+
+@media(max-width:640px){
+  .nav-links{display:none}
+  section{padding:4.5rem 0}
+  .hero{padding-top:6rem}
+  .sec-title{margin-bottom:3rem}
+  .skills-grid{gap:2rem}
+}
+</style>
+
+<!-- Reveal animation starts at opacity:0 and is driven by JS.
+     Without this guard, a JS failure would leave the page blank. -->
+<noscript><style>.fade{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+<!-- NAV -->
+<nav class="site-nav" id="nav" aria-label="Primary">
+  <a href="#" class="nav-name">Ryan Horgan</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="mailto:jrhorgan.work@gmail.com">Contact</a></li>
+    </ul>
+    <button class="theme-btn" id="theme-btn" aria-pressed="false">Dark</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero grid-bg" aria-label="Introduction">
+  <div class="wrap">
+    <h1 class="hero-name fade">
+      <span class="first">Ryan</span>
+      <span class="last">Horgan</span>
+    </h1>
+    <div class="hero-divider fade" data-d="1"></div>
+    <div class="hero-bottom">
+      <p class="hero-tagline fade" data-d="2">
+        Enterprise Sales Engineer at Schneider Electric &mdash; $30M+ quota,
+        120% attainment. Independently shipped two production audio ML
+        products after hours. I build what I can't buy.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-pair fade" data-d="2">
+          <span class="meta-label">Location</span>
+          <span class="meta-value">Charlotte, NC</span>
+        </div>
+        <div class="meta-pair fade" data-d="3">
+          <span class="meta-label">Current Role</span>
+          <span class="meta-value meta-live">
+            <span class="pulse" aria-hidden="true"></span>Schneider Electric
+          </span>
+        </div>
+        <div class="meta-pair fade" data-d="4">
+          <span class="meta-label">Contact</span>
+          <span class="meta-value"><a href="mailto:jrhorgan.work@gmail.com">jrhorgan.work@gmail.com</a></span>
+        </div>
+        <div class="meta-pair fade" data-d="5">
+          <span class="meta-label">LinkedIn</span>
+          <span class="meta-value"><a href="https://linkedin.com/in/jrh2026" target="_blank" rel="noopener">linkedin.com/in/jrh2026</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-track" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-bar fade">
+      <span class="sec-eye">01 &mdash; Projects</span>
+      <div class="sec-rule"></div>
+    </div>
+    <h2 class="sec-title fade" data-d="1">Two products, built solo, in production.</h2>
+
+    <!-- I.D. -->
+    <div class="project">
+      <div class="proj-row">
+        <div>
+          <p class="proj-eye fade">Audio ML &middot; Producer Matching Platform</p>
+          <h3 class="proj-title fade" data-d="1">In Development Studios</h3>
+          <a href="https://indevelopmentstudios.com" class="proj-url fade" data-d="2" target="_blank" rel="noopener">indevelopmentstudios.com &nearr;</a>
+          <p class="proj-pitch fade" data-d="2">
+            Upload a track. Get a sonic fingerprint. Match with producers
+            who share your sonic DNA &mdash; no follower counts, no metadata, no
+            algorithm gaming. Pure audio-based matching at every layer of
+            the stack. Free tier and paid subscriptions, live in production.
+          </p>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">The Matching Engine</p>
+            <p class="story-txt">
+              Three independent signals feed each upload. <code>fpcalc</code> (Chromaprint) generates
+              an acoustic fingerprint, MD5-hashed for exact-duplicate dedup. A 512-dimensional CLAP
+              embedding &mdash; L2-normalized for cosine comparability &mdash; captures semantic similarity across
+              the corpus. A RandomForest classifier predicts genre and subgenre; if
+              <code>style_confidence &lt; 0.40</code> or the track is a statistical outlier,
+              it labels "Experimental" rather than mislabeling. Match responses use a deliberate
+              3+2 split: three in-subgenre picks for precision, two cross-subgenre discovery picks
+              to break filter bubbles.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Cross-Page File Carry via IndexedDB</p>
+            <p class="story-txt">
+              The signup flow needed a binary audio file to survive a full page navigation from the
+              anonymous upload page into authenticated onboarding. <code>localStorage</code> handles
+              metadata, not binary files. Solution: IndexedDB with a 30-minute TTL.
+              <code>idbPutTrack(file)</code> writes on upload; a module-scoped promise resolves
+              <code>idbGetTrack()</code> at signup load. The carried file reuses preflight analysis;
+              a re-selected file on step 5 overrides and triggers fresh analysis. No redundant GPU
+              round-trips, no re-upload friction.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">The RLS Policy Trap</p>
+            <p class="story-txt">
+              Row Level Security enforces the daily match-reveal quota server-side. A non-obvious
+              Supabase constraint surfaced during testing: an RLS policy cannot
+              <code>SELECT FROM auth.users</code> &mdash; the authenticated role lacks permission,
+              silently blocking all inserts. The fix: read tier from
+              <code>auth.jwt()-&gt;'app_metadata'-&gt;&gt;'tier'</code> inline in the policy &mdash;
+              evaluates from the signed JWT without a table join. The track-limit trigger works
+              because it runs as <code>SECURITY DEFINER</code>.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Entitlement Security Model</p>
+            <p class="story-txt">
+              Any signed-in user could self-grant Pro by calling
+              <code>auth.updateUser({data:{tier:'pro'}})</code> &mdash; Supabase allows users to write
+              their own <code>user_metadata</code>. Migrated all entitlements to
+              <code>app_metadata</code>, service-role-writable only. Verified live: wrote
+              <code>user_metadata.tier='studio'</code> from the console; the gateway still granted
+              <code>free</code> and blocked paid stems.
+            </p>
+          </div>
+        </div>
+
+        <div class="proj-sidebar">
+          <div class="scard fade" data-d="2">
+            <p class="sc-lbl">Status</p>
+            <div class="status-row"><span class="sdot"></span><span class="sv">Live &mdash; indevelopmentstudios.com</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">FastAPI on Railway</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">Netlify static frontend</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">Stripe billing active</span></div>
+          </div>
+          <div class="scard fade" data-d="3">
+            <p class="sc-lbl">Stack</p>
+            <div class="chips">
+              <span class="chip">Python</span><span class="chip">FastAPI</span>
+              <span class="chip">CLAP</span><span class="chip">Chromaprint</span>
+              <span class="chip">RandomForest</span><span class="chip">Supabase</span>
+              <span class="chip">PostgreSQL</span><span class="chip">RLS</span>
+              <span class="chip">JavaScript</span><span class="chip">React</span>
+              <span class="chip">IndexedDB</span><span class="chip">Stripe</span>
+              <span class="chip">Railway</span><span class="chip">Netlify</span>
+            </div>
+          </div>
+          <div class="scard fade" data-d="4">
+            <p class="sc-lbl">Specs</p>
+            <div class="spec-tbl">
+              <span class="sk">Embedding</span><span class="sv2">512-dim CLAP, L2-norm</span>
+              <span class="sk">Match</span><span class="sv2">3 in-subgenre + 2 discovery</span>
+              <span class="sk">Auth</span><span class="sv2">Supabase email + JWT</span>
+              <span class="sk">Entitlements</span><span class="sv2">app_metadata, service-role only</span>
+              <span class="sk">Tiers</span><span class="sv2">Free / Pro $18 / Studio $49</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ID.ai -->
+    <div class="project is-amber">
+      <div class="proj-row">
+        <div>
+          <p class="proj-eye fade">Audio AI &middot; Stem Separation Engine</p>
+          <h3 class="proj-title fade" data-d="1">ID.ai</h3>
+          <a href="https://idai.indevelopmentstudios.com" class="proj-url fade" data-d="2" target="_blank" rel="noopener">idai.indevelopmentstudios.com &nearr;</a>
+          <p class="proj-pitch fade" data-d="2">
+            Upload audio. Receive up to 10 isolated stems &mdash; vocals, drums, bass, guitar, piano,
+            synth, and tool stems for karaoke splitting, denoising, and dereverberation. GPU-backed
+            via Modal.com, live Stripe billing, WCAG 2.1 AA verified, CI green.
+          </p>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Model Selection &amp; Evaluation</p>
+            <p class="story-txt">
+              Benchmarked Kim FT Mel-Band Roformer, Demucs <code>htdemucs_ft</code>, four ensemble
+              methods, cascade pipelines, and other-by-subtraction on an EDM dataset. Kim FT produced
+              1.6&ndash;5.6&times; less instrument bleed into the vocal stem. Ensembles and cascades were
+              rejected &mdash; quality gains didn't justify latency cost. Locked recipe: Kim FT for
+              vocals and instrumental, <code>htdemucs_ft</code> for drums, bass and other,
+              <code>htdemucs_6s</code> for guitar, piano and synth. A one-line edit in
+              <code>recipe.py</code> swaps any stem's model &mdash; synced via a tri-copy identity test in CI.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Billing &amp; Quota Architecture</p>
+            <p class="story-txt">
+              End-to-end Stripe: Payment Links &rarr; <code>checkout.session.completed</code> webhook
+              &rarr; HMAC signature verification &rarr; tier flip in <code>app_metadata</code> via
+              service role. Monthly quota persists as <code>usage_month</code> (UTC "YYYY-MM") and
+              <code>usage_minutes</code> in <code>app_metadata</code>, surviving redeploys; a stale
+              month auto-resets. The over-cap check fires before the ffmpeg duration probe &mdash; an
+              unprobeable upload would otherwise bypass an exhausted balance. Verified with a live
+              test-mode card checkout.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Safari AudioContext Unlock</p>
+            <p class="story-txt">
+              The multitrack stem player played silently on Safari &mdash; scrubber advanced,
+              <code>currentTime</code> moved, no audio. Classic Safari muted AudioContext until
+              a user gesture. Fix: <code>unlockAudio()</code> on first pointer or keyboard event,
+              priming the AudioContext with a 1-sample silent buffer. Browser tooling is
+              Chromium-only, so verified via an injected-tone analyser measuring output RMS against
+              a 440 Hz reference.
+            </p>
+          </div>
+
+          <div class="story fade" data-d="3">
+            <p class="story-lbl">Dependency-Free ZIP Assembly</p>
+            <p class="story-txt">
+              "Download all stems" required a single zip file. A zip library would break the
+              dependency-free frontend constraint. Wrote ~40 lines of inline ZIP: STORE compression
+              (audio barely compresses, so DEFLATE adds overhead without benefit), a CRC32 lookup
+              table, and Blob-parts concatenation. Verified by capturing the Blob as base64 and
+              running <code>unzip -t</code> &mdash; all CRC32 checksums passed, each stem held correct audio.
+            </p>
+          </div>
+        </div>
+
+        <div class="proj-sidebar">
+          <div class="scard fade" data-d="2">
+            <p class="sc-lbl">Status</p>
+            <div class="status-row"><span class="sdot"></span><span class="sv">Live &mdash; idai.indevelopmentstudios.com</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">Stripe billing &mdash; live mode</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">WCAG 2.1 AA &mdash; 0 axe violations</span></div>
+            <div class="status-row"><span class="sdot"></span><span class="sv">CI green (GitHub Actions)</span></div>
+          </div>
+          <div class="scard fade" data-d="3">
+            <p class="sc-lbl">Stack</p>
+            <div class="chips">
+              <span class="chip">Python</span><span class="chip">FastAPI</span>
+              <span class="chip">Modal.com</span><span class="chip">Roformer</span>
+              <span class="chip">Demucs</span><span class="chip">audio-separator</span>
+              <span class="chip">Supabase</span><span class="chip">Stripe</span>
+              <span class="chip">Railway</span><span class="chip">Netlify</span>
+              <span class="chip">Playwright</span><span class="chip">pytest</span>
+              <span class="chip">axe-core</span><span class="chip">GitHub Actions</span>
+            </div>
+          </div>
+          <div class="scard fade" data-d="4">
+            <p class="sc-lbl">Specs</p>
+            <div class="spec-tbl">
+              <span class="sk">Stems</span><span class="sv2">10, incl. karaoke, denoise, deverb</span>
+              <span class="sk">GPU</span><span class="sv2">Modal.com L40S</span>
+              <span class="sk">Tests</span><span class="sv2">58 backend + 10 Playwright e2e</span>
+              <span class="sk">Free</span><span class="sv2">2 stems, 1 separation/day</span>
+              <span class="sk">Pro</span><span class="sv2">All 10 stems, 1,000 min/mo</span>
+              <span class="sk">Studio</span><span class="sv2">All stems, 3,000 min/mo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-bar fade">
+      <span class="sec-eye">02 &mdash; Experience</span>
+      <div class="sec-rule"></div>
+    </div>
+    <h2 class="sec-title fade" data-d="1">Enterprise sales. Engineering roots. Builder instinct throughout.</h2>
+
+    <div class="timeline">
+      <div class="tl now fade">
+        <p class="tl-period">March 2025 &mdash; Present</p>
+        <p class="tl-role">Digital Account Executive &mdash; Water/Wastewater (Enterprise)</p>
+        <p class="tl-org">Schneider Electric &middot; Charlotte, NC</p>
+        <ul class="tl-buls">
+          <li>Drive net-new enterprise acquisition across U.S. territories; $30M quota, 120% attainment FY2025.</li>
+          <li>Built custom AI Agents (Claude Cowork) and deployed Microsoft Copilot to automate RFQ tracking and municipal project surveillance &mdash; high-agency tooling adoption ahead of the broader team.</li>
+          <li>Build high-velocity lead pipelines from installed-base data, infrastructure age, public RFQs, and capital-spend signals.</li>
+          <li>Core member of the sales-tech evaluation team (GovSpend, Citylitics, Sailebot); relay structured product feedback to internal engineering teams.</li>
+          <li>Manage full opportunity lifecycle in bFO (Salesforce); build Tableau dashboards for pipeline hygiene and path-to-quota forecasting.</li>
+        </ul>
+      </div>
+
+      <div class="tl fade">
+        <p class="tl-period">April 2023 &mdash; March 2025</p>
+        <p class="tl-role">Territory Sales Engineer &mdash; Power Products (National)</p>
+        <p class="tl-org">Schneider Electric &middot; Charlotte, NC</p>
+        <ul class="tl-buls">
+          <li>Full-cycle sales across complex, multi-stakeholder structures; 100%+ attainment on $93.4M (2023) and $107.4M (2024) quotas.</li>
+          <li>Closed an individual Water/Wastewater enterprise deal valued at $8M+, built from scratch in a new market segment.</li>
+          <li>Partnered with end-users, contractors, and distribution networks to deliver value-engineered solutions and compressed deal cycles.</li>
+        </ul>
+      </div>
+
+      <div class="tl fade">
+        <p class="tl-period">April 2021 &mdash; April 2023</p>
+        <p class="tl-role">Mechanical Design Engineer &mdash; Power Products (Global Supply Chain)</p>
+        <p class="tl-org">Schneider Electric &middot; Columbia, SC</p>
+        <ul class="tl-buls">
+          <li>Designed custom power distribution units per client spec; applied first-principles problem solving and DFM to eliminate production bottlenecks.</li>
+          <li>Established engineering-to-manufacturing feedback loops across factory floor teams, resolving recurring quality issues with end-to-end ownership.</li>
+        </ul>
+      </div>
+
+      <div class="tl edu fade">
+        <p class="tl-period">August 2021 &mdash; May 2025</p>
+        <p class="tl-role">M.Eng. &mdash; Additive Manufacturing and Design</p>
+        <p class="tl-org">Pennsylvania State University (World Campus) &middot; University Park, PA</p>
+        <span class="edu-badge">Graduate</span>
+      </div>
+
+      <div class="tl edu fade">
+        <p class="tl-period">August 2016 &mdash; December 2020</p>
+        <p class="tl-role">B.S. &mdash; Mechanical Engineering</p>
+        <p class="tl-org">University of South Carolina &middot; Columbia, SC</p>
+        <span class="edu-badge">Undergraduate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-bar fade">
+      <span class="sec-eye">03 &mdash; Skills</span>
+      <div class="sec-rule"></div>
+    </div>
+    <h2 class="sec-title fade" data-d="1">From GPU inference to enterprise quota.</h2>
+    <div class="skills-grid">
+      <div class="sg fade" data-d="1">
+        <p class="sg-lbl">Languages &amp; Frameworks</p>
+        <ul class="sg-items">
+          <li>Python (FastAPI, pytest)</li>
+          <li>JavaScript (vanilla, React)</li>
+          <li>SQL &mdash; PostgreSQL, RLS policy design</li>
+          <li>HTML / CSS</li>
+          <li>Bash / shell scripting</li>
+        </ul>
+      </div>
+      <div class="sg fade" data-d="2">
+        <p class="sg-lbl">ML &amp; Audio</p>
+        <ul class="sg-items">
+          <li>CLAP embeddings (512-dim)</li>
+          <li>Mel-Band Roformer</li>
+          <li>Demucs (htdemucs_ft / 6s)</li>
+          <li>Chromaprint &mdash; acoustic fingerprinting</li>
+          <li>RandomForest classifier (sklearn)</li>
+          <li>audio-separator &mdash; Modal.com GPU</li>
+        </ul>
+      </div>
+      <div class="sg fade" data-d="3">
+        <p class="sg-lbl">Infrastructure &amp; Testing</p>
+        <ul class="sg-items">
+          <li>Railway &mdash; FastAPI deployment</li>
+          <li>Netlify &mdash; static hosting + CSP</li>
+          <li>Supabase &mdash; auth, DB, storage</li>
+          <li>Stripe &mdash; billing, HMAC webhooks</li>
+          <li>GitHub Actions &mdash; CI/CD</li>
+          <li>Playwright / axe-core</li>
+        </ul>
+      </div>
+      <div class="sg fade" data-d="1">
+        <p class="sg-lbl">Enterprise &amp; GTM</p>
+        <ul class="sg-items">
+          <li>Enterprise B2B outbound hunting</li>
+          <li>Full-cycle deal execution</li>
+          <li>Salesforce (bFO) &middot; Tableau</li>
+          <li>AI Agents &mdash; Claude Cowork</li>
+          <li>Microsoft Copilot</li>
+          <li>Pipeline forecasting &amp; analytics</li>
+        </ul>
+      </div>
+      <div class="sg fade" data-d="2">
+        <p class="sg-lbl">Engineering</p>
+        <ul class="sg-items">
+          <li>Mechanical design (power distribution)</li>
+          <li>Design for Manufacturability</li>
+          <li>Additive manufacturing (M.Eng.)</li>
+          <li>First-principles problem solving</li>
+          <li>Cross-functional systems ownership</li>
+        </ul>
+      </div>
+      <div class="sg fade" data-d="3">
+        <p class="sg-lbl">Security &amp; Accessibility</p>
+        <ul class="sg-items">
+          <li>JWT entitlement patterns</li>
+          <li>Supabase RLS policy authoring</li>
+          <li>HMAC webhook verification</li>
+          <li>WCAG 2.1 AA compliance</li>
+          <li>XSS prevention (escHtml)</li>
+          <li>Content Security Policy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span class="footer-l">Ryan Horgan &middot; Charlotte, NC &middot; 2026</span>
+  <nav class="footer-links" aria-label="Contact">
+    <a href="mailto:jrhorgan.work@gmail.com">Email</a>
+    <a href="https://linkedin.com/in/jrh2026" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://indevelopmentstudios.com" target="_blank" rel="noopener">I.D.</a>
+    <a href="https://idai.indevelopmentstudios.com" target="_blank" rel="noopener">ID.ai</a>
+  </nav>
+</footer>
+
+<script>
+/* -- Frosted nav on scroll -- */
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('scrolled', scrollY > 40);
+addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+/* -- Theme toggle -- */
+const btn  = document.getElementById('theme-btn');
+const root = document.documentElement;
+const saved = localStorage.getItem('theme');
+let dark = saved ? saved === 'dark'
+                 : matchMedia('(prefers-color-scheme:dark)').matches;
+
+function applyTheme(){
+  root.dataset.theme = dark ? 'dark' : 'light';
+  btn.textContent = dark ? 'Light' : 'Dark';
+  btn.setAttribute('aria-pressed', String(dark));
+  btn.setAttribute('aria-label',
+    dark ? 'Switch to light theme' : 'Switch to dark theme');
+}
+applyTheme();
+
+btn.addEventListener('click', () => {
+  dark = !dark;
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  applyTheme();
+});
+
+/* -- Scroll reveal -- */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const items  = document.querySelectorAll('.fade');
+
+if (reduce || !('IntersectionObserver' in window)) {
+  items.forEach(el => el.classList.add('in'));
+} else {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(el => obs.observe(el));
+}
+</script>
+</body>
+</html>
