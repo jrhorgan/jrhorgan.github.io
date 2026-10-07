@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ryan Horgan</title>
-<meta name="description" content="Ryan Horgan - Digital Account Executive at Schneider Electric and solo builder of two production audio ML products, I.D. and ID.ai. Interested in Agentic AI for personal use and work projects">
+<meta name="description" content="Ryan Horgan - Digital Account Executive at Schneider Electric and mechanical engineer. Built two software products: I.D. and ID.ai.">
 <meta name="author" content="Ryan Horgan">
 <meta name="color-scheme" content="light dark">
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Ryan Horgan">
-<meta property="og:description" content="Ryan Horgan - Digital Account Executive at Schneider Electric and solo builder of two production audio ML products, I.D. and ID.ai. Interested in using Agentic AI for personal and work projects">
+<meta property="og:description" content="Ryan Horgan - Digital Account Executive at Schneider Electric and mechanical engineer. Built two software products: I.D. and ID.ai.">
 <meta name="twitter:card" content="summary_large_image">
 <style>
 /* ============================================================
@@ -524,6 +524,11 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
   .sec-title{margin-bottom:3rem}
   .skills-grid{gap:2rem}
 }
+
+.tl-buls strong{color:var(--ink);font-weight:600}
+.sg-txt{font-size:var(--t-small);color:var(--ink-2);line-height:1.6;max-width:34ch}
+.tools{margin-top:3.5rem}
+.tools .sc-lbl{margin-bottom:.9rem}
 </style>
 
 <!-- Reveal animation starts at opacity:0 and is driven by JS.
@@ -557,9 +562,9 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
     <div class="hero-divider fade" data-d="1"></div>
     <div class="hero-bottom">
       <p class="hero-tagline fade" data-d="2">
-        Digital Account Executive at Schneider Electric &mdash; $30M+ quota,
-        120% attainment. Independently shipped two production audio ML
-        products after hours. I build what I can't buy.
+        Digital Account Executive at Schneider Electric: $30M quota, 120% attainment
+        in FY2025. Mechanical engineer by training. Built two software products,
+        I.D. and ID.ai.
       </p>
       <div class="hero-meta">
         <div class="meta-pair fade" data-d="2">
@@ -593,209 +598,85 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
 <section id="projects">
   <div class="wrap">
     <div class="sec-bar fade">
-      <span class="sec-eye">01 &mdash; Projects</span>
       <div class="sec-rule"></div>
     </div>
-    <h2 class="sec-title fade" data-d="1">Two products, built solo, in production.</h2>
+    <h2 class="sec-title fade" data-d="1">Projects</h2>
 
-    <!-- I.D. -->
     <div class="project">
       <div class="proj-row">
         <div>
-          <p class="proj-eye fade">Audio ML &middot; Producer Matching Platform</p>
+          <p class="proj-eye fade">Producer matching</p>
           <h3 class="proj-title fade" data-d="1">In Development Studios</h3>
           <a href="https://indevelopmentstudios.com" class="proj-url fade" data-d="2" target="_blank" rel="noopener">indevelopmentstudios.com &nearr;</a>
-          <p class="proj-pitch fade" data-d="2">
-            Upload a track. Get a sonic fingerprint. Match with producers
-            who share your sonic DNA &mdash; no follower counts, no metadata, no
-            algorithm gaming. Pure audio-based matching at every layer of
-            the stack. Free tier and paid subscriptions, live in production.
-          </p>
+          <p class="proj-pitch fade" data-d="2">A website where music producers upload a track and get matched with other producers based on how the music sounds, not on follower counts.</p>
 
           <div class="story fade" data-d="3">
-            <p class="story-lbl">The Matching Engine</p>
-            <p class="story-txt">
-              Three independent signals feed each upload. <code>fpcalc</code> (Chromaprint) generates
-              an acoustic fingerprint, MD5-hashed for exact-duplicate dedup. A 512-dimensional CLAP
-              embedding &mdash; L2-normalized for cosine comparability &mdash; captures semantic similarity across
-              the corpus. A RandomForest classifier predicts genre and subgenre; if
-              <code>style_confidence &lt; 0.40</code> or the track is a statistical outlier,
-              it labels "Experimental" rather than mislabeling. Match responses use a deliberate
-              3+2 split: three in-subgenre picks for precision, two cross-subgenre discovery picks
-              to break filter bubbles.
-            </p>
+            <p class="story-lbl">What I did</p>
+            <ul class="tl-buls">
+          <li>Built audio analysis that gives each track a fingerprint, tempo, key, and a genre prediction.</li>
+          <li>Built matching that returns 3 results from the same subgenre and 2 from other subgenres.</li>
+          <li>Built accounts, free and paid plans, and plan limits enforced in the database.</li>
+          <li>Found that a signed-in user could change their own plan from the browser. Moved plan data to a field only the server can write, then confirmed the fix against the live database.</li>
+            </ul>
           </div>
 
           <div class="story fade" data-d="3">
-            <p class="story-lbl">Cross-Page File Carry via IndexedDB</p>
-            <p class="story-txt">
-              The signup flow needed a binary audio file to survive a full page navigation from the
-              anonymous upload page into authenticated onboarding. <code>localStorage</code> handles
-              metadata, not binary files. Solution: IndexedDB with a 30-minute TTL.
-              <code>idbPutTrack(file)</code> writes on upload; a module-scoped promise resolves
-              <code>idbGetTrack()</code> at signup load. The carried file reuses preflight analysis;
-              a re-selected file on step 5 overrides and triggers fresh analysis. No redundant GPU
-              round-trips, no re-upload friction.
-            </p>
-          </div>
-
-          <div class="story fade" data-d="3">
-            <p class="story-lbl">The RLS Policy Trap</p>
-            <p class="story-txt">
-              Row Level Security enforces the daily match-reveal quota server-side. A non-obvious
-              Supabase constraint surfaced during testing: an RLS policy cannot
-              <code>SELECT FROM auth.users</code> &mdash; the authenticated role lacks permission,
-              silently blocking all inserts. The fix: read tier from
-              <code>auth.jwt()-&gt;'app_metadata'-&gt;&gt;'tier'</code> inline in the policy &mdash;
-              evaluates from the signed JWT without a table join. The track-limit trigger works
-              because it runs as <code>SECURITY DEFINER</code>.
-            </p>
-          </div>
-
-          <div class="story fade" data-d="3">
-            <p class="story-lbl">Entitlement Security Model</p>
-            <p class="story-txt">
-              Any signed-in user could self-grant Pro by calling
-              <code>auth.updateUser({data:{tier:'pro'}})</code> &mdash; Supabase allows users to write
-              their own <code>user_metadata</code>. Migrated all entitlements to
-              <code>app_metadata</code>, service-role-writable only. Verified live: wrote
-              <code>user_metadata.tier='studio'</code> from the console; the gateway still granted
-              <code>free</code> and blocked paid stems.
-            </p>
+            <p class="story-lbl">Where it applies</p>
+            <ul class="tl-buls">
+          <li><strong>Define the goal first.</strong> Matching on sound meant deciding what to measure before building. The same step applies to writing requirements for any project.</li>
+          <li><strong>Check your own work for weak points.</strong> I tested whether users could get around the limits and found a gap. The same habit applies to reviewing a quote, a contract, or a forecast.</li>
+          <li><strong>Balance precision and variety.</strong> The 2 outside-subgenre results keep matches from all looking alike. The same tradeoff shows up when prioritizing accounts or choosing between safe and new options.</li>
+            </ul>
           </div>
         </div>
 
         <div class="proj-sidebar">
           <div class="scard fade" data-d="2">
-            <p class="sc-lbl">Status</p>
-            <div class="status-row"><span class="sdot"></span><span class="sv">Live &mdash; indevelopmentstudios.com</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">FastAPI on Railway</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">Netlify static frontend</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">Stripe billing active</span></div>
-          </div>
-          <div class="scard fade" data-d="3">
-            <p class="sc-lbl">Stack</p>
-            <div class="chips">
-              <span class="chip">Python</span><span class="chip">FastAPI</span>
-              <span class="chip">CLAP</span><span class="chip">Chromaprint</span>
-              <span class="chip">RandomForest</span><span class="chip">Supabase</span>
-              <span class="chip">PostgreSQL</span><span class="chip">RLS</span>
-              <span class="chip">JavaScript</span><span class="chip">React</span>
-              <span class="chip">IndexedDB</span><span class="chip">Stripe</span>
-              <span class="chip">Railway</span><span class="chip">Netlify</span>
-            </div>
-          </div>
-          <div class="scard fade" data-d="4">
-            <p class="sc-lbl">Specs</p>
-            <div class="spec-tbl">
-              <span class="sk">Embedding</span><span class="sv2">512-dim CLAP, L2-norm</span>
-              <span class="sk">Match</span><span class="sv2">3 in-subgenre + 2 discovery</span>
-              <span class="sk">Auth</span><span class="sv2">Supabase email + JWT</span>
-              <span class="sk">Entitlements</span><span class="sv2">app_metadata, service-role only</span>
-              <span class="sk">Tiers</span><span class="sv2">Free / Pro $18 / Studio $49</span>
-            </div>
+            <p class="sc-lbl">Built with</p>
+            <div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">CLAP audio model</span><span class="chip">Chromaprint</span><span class="chip">scikit-learn</span><span class="chip">Supabase</span><span class="chip">PostgreSQL</span><span class="chip">JavaScript</span><span class="chip">React</span><span class="chip">Stripe</span><span class="chip">Railway</span><span class="chip">Netlify</span></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ID.ai -->
+
     <div class="project is-amber">
       <div class="proj-row">
         <div>
-          <p class="proj-eye fade">Audio AI &middot; Stem Separation Engine</p>
+          <p class="proj-eye fade">Stem separation</p>
           <h3 class="proj-title fade" data-d="1">ID.ai</h3>
           <a href="https://idai.indevelopmentstudios.com" class="proj-url fade" data-d="2" target="_blank" rel="noopener">idai.indevelopmentstudios.com &nearr;</a>
-          <p class="proj-pitch fade" data-d="2">
-            Upload audio. Receive up to 10 isolated stems &mdash; vocals, drums, bass, guitar, piano,
-            synth, and tool stems for karaoke splitting, denoising, and dereverberation. GPU-backed
-            via Modal.com, live Stripe billing, WCAG 2.1 AA verified, CI green.
-          </p>
+          <p class="proj-pitch fade" data-d="2">A tool that splits a song into separate parts: vocals, drums, bass, guitar, piano, and more, up to 10 in total.</p>
 
           <div class="story fade" data-d="3">
-            <p class="story-lbl">Model Selection &amp; Evaluation</p>
-            <p class="story-txt">
-              Benchmarked Kim FT Mel-Band Roformer, Demucs <code>htdemucs_ft</code>, four ensemble
-              methods, cascade pipelines, and other-by-subtraction on an EDM dataset. Kim FT produced
-              1.6&ndash;5.6&times; less instrument bleed into the vocal stem. Ensembles and cascades were
-              rejected &mdash; quality gains didn't justify latency cost. Locked recipe: Kim FT for
-              vocals and instrumental, <code>htdemucs_ft</code> for drums, bass and other,
-              <code>htdemucs_6s</code> for guitar, piano and synth. A one-line edit in
-              <code>recipe.py</code> swaps any stem's model &mdash; synced via a tri-copy identity test in CI.
-            </p>
+            <p class="story-lbl">What I did</p>
+            <ul class="tl-buls">
+          <li>Tested several AI models on electronic tracks and picked the one with the least instrument sound leaking into the vocals (1.6 to 5.6 times less than the other model tested).</li>
+          <li>Connected Stripe payments to paid plans, with monthly usage limits set from compute cost.</li>
+          <li>Added automated tests and accessibility checks.</li>
+          <li>Fixed a bug where audio played silently in Safari.</li>
+            </ul>
           </div>
 
           <div class="story fade" data-d="3">
-            <p class="story-lbl">Billing &amp; Quota Architecture</p>
-            <p class="story-txt">
-              End-to-end Stripe: Payment Links &rarr; <code>checkout.session.completed</code> webhook
-              &rarr; HMAC signature verification &rarr; tier flip in <code>app_metadata</code> via
-              service role. Monthly quota persists as <code>usage_month</code> (UTC "YYYY-MM") and
-              <code>usage_minutes</code> in <code>app_metadata</code>, surviving redeploys; a stale
-              month auto-resets. The over-cap check fires before the ffmpeg duration probe &mdash; an
-              unprobeable upload would otherwise bypass an exhausted balance. Verified with a live
-              test-mode card checkout.
-            </p>
-          </div>
-
-          <div class="story fade" data-d="3">
-            <p class="story-lbl">Safari AudioContext Unlock</p>
-            <p class="story-txt">
-              The multitrack stem player played silently on Safari &mdash; scrubber advanced,
-              <code>currentTime</code> moved, no audio. Classic Safari muted AudioContext until
-              a user gesture. Fix: <code>unlockAudio()</code> on first pointer or keyboard event,
-              priming the AudioContext with a 1-sample silent buffer. Browser tooling is
-              Chromium-only, so verified via an injected-tone analyser measuring output RMS against
-              a 440 Hz reference.
-            </p>
-          </div>
-
-          <div class="story fade" data-d="3">
-            <p class="story-lbl">Dependency-Free ZIP Assembly</p>
-            <p class="story-txt">
-              "Download all stems" required a single zip file. A zip library would break the
-              dependency-free frontend constraint. Wrote ~40 lines of inline ZIP: STORE compression
-              (audio barely compresses, so DEFLATE adds overhead without benefit), a CRC32 lookup
-              table, and Blob-parts concatenation. Verified by capturing the Blob as base64 and
-              running <code>unzip -t</code> &mdash; all CRC32 checksums passed, each stem held correct audio.
-            </p>
+            <p class="story-lbl">Where it applies</p>
+            <ul class="tl-buls">
+          <li><strong>Compare options with evidence.</strong> I tested the models instead of choosing by reputation. The same method applies when evaluating sales tools at work.</li>
+          <li><strong>Set limits from cost.</strong> Usage caps were sized so each plan covers its compute cost. The same logic applies to pricing and discounting.</li>
+          <li><strong>Test before release.</strong> Automated tests catch problems before customers do. This applies to any process that gets repeated.</li>
+            </ul>
           </div>
         </div>
 
         <div class="proj-sidebar">
           <div class="scard fade" data-d="2">
-            <p class="sc-lbl">Status</p>
-            <div class="status-row"><span class="sdot"></span><span class="sv">Live &mdash; idai.indevelopmentstudios.com</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">Stripe billing &mdash; live mode</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">WCAG 2.1 AA &mdash; 0 axe violations</span></div>
-            <div class="status-row"><span class="sdot"></span><span class="sv">CI green (GitHub Actions)</span></div>
-          </div>
-          <div class="scard fade" data-d="3">
-            <p class="sc-lbl">Stack</p>
-            <div class="chips">
-              <span class="chip">Python</span><span class="chip">FastAPI</span>
-              <span class="chip">Modal.com</span><span class="chip">Roformer</span>
-              <span class="chip">Demucs</span><span class="chip">audio-separator</span>
-              <span class="chip">Supabase</span><span class="chip">Stripe</span>
-              <span class="chip">Railway</span><span class="chip">Netlify</span>
-              <span class="chip">Playwright</span><span class="chip">pytest</span>
-              <span class="chip">axe-core</span><span class="chip">GitHub Actions</span>
-            </div>
-          </div>
-          <div class="scard fade" data-d="4">
-            <p class="sc-lbl">Specs</p>
-            <div class="spec-tbl">
-              <span class="sk">Stems</span><span class="sv2">10, incl. karaoke, denoise, deverb</span>
-              <span class="sk">GPU</span><span class="sv2">Modal.com L40S</span>
-              <span class="sk">Tests</span><span class="sv2">58 backend + 10 Playwright e2e</span>
-              <span class="sk">Free</span><span class="sv2">2 stems, 1 separation/day</span>
-              <span class="sk">Pro</span><span class="sv2">All 10 stems, 1,000 min/mo</span>
-              <span class="sk">Studio</span><span class="sv2">All stems, 3,000 min/mo</span>
-            </div>
+            <p class="sc-lbl">Built with</p>
+            <div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">Modal</span><span class="chip">Roformer</span><span class="chip">Demucs</span><span class="chip">Supabase</span><span class="chip">Stripe</span><span class="chip">Railway</span><span class="chip">Netlify</span><span class="chip">Playwright</span><span class="chip">pytest</span><span class="chip">GitHub Actions</span></div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -803,10 +684,9 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
 <section id="experience">
   <div class="wrap">
     <div class="sec-bar fade">
-      <span class="sec-eye">02 &mdash; Experience</span>
       <div class="sec-rule"></div>
     </div>
-    <h2 class="sec-title fade" data-d="1">Enterprise sales. Engineering roots. Builder instinct throughout.</h2>
+    <h2 class="sec-title fade" data-d="1">Experience</h2>
 
     <div class="timeline">
       <div class="tl now fade">
@@ -814,11 +694,11 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
         <p class="tl-role">Digital Account Executive &mdash; Water/Wastewater (Enterprise)</p>
         <p class="tl-org">Schneider Electric &middot; Charlotte, NC</p>
         <ul class="tl-buls">
-          <li>Drive net-new enterprise acquisition across U.S. territories; $30M quota, 120% attainment FY2025.</li>
-          <li>Built custom AI Agents (Claude Cowork) and deployed Microsoft Copilot to automate RFQ tracking and municipal project surveillance &mdash; high-agency tooling adoption ahead of the broader team.</li>
-          <li>Build high-velocity lead pipelines from installed-base data, infrastructure age, public RFQs, and capital-spend signals.</li>
-          <li>Core member of the sales-tech evaluation team (GovSpend, Citylitics, Sailebot); relay structured product feedback to internal engineering teams.</li>
-          <li>Manage full opportunity lifecycle in bFO (Salesforce); build Tableau dashboards for pipeline hygiene and path-to-quota forecasting.</li>
+          <li>Win new enterprise customers across U.S. territories. $30M quota, 120% attainment in FY2025.</li>
+          <li>Build lead lists from market data: installed base, infrastructure age, public RFQs, and capital spending.</li>
+          <li>Built AI agents (Claude Cowork) and use Microsoft Copilot to track RFQs and monitor municipal projects.</li>
+          <li>Test new sales tools (GovSpend, Citylitics, Sailebot) and give feedback to internal product teams.</li>
+          <li>Manage opportunities in Salesforce (bFO) and build Tableau dashboards for pipeline and forecasting.</li>
         </ul>
       </div>
 
@@ -827,9 +707,9 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
         <p class="tl-role">Territory Sales Engineer &mdash; Power Products (National)</p>
         <p class="tl-org">Schneider Electric &middot; Charlotte, NC</p>
         <ul class="tl-buls">
-          <li>Full-cycle sales across complex, multi-stakeholder structures; 100%+ attainment on $93.4M (2023) and $107.4M (2024) quotas.</li>
-          <li>Closed an individual Water/Wastewater enterprise deal valued at $8M+, built from scratch in a new market segment.</li>
-          <li>Partnered with end-users, contractors, and distribution networks to deliver value-engineered solutions and compressed deal cycles.</li>
+          <li>Met 100%+ of quota: $93.4M in 2023 and $107.4M in 2024.</li>
+          <li>Closed an $8M+ Water/Wastewater deal (2023&ndash;2024), building the relationships from scratch.</li>
+          <li>Worked with end users, contractors, and distributors on technical solutions and pricing.</li>
         </ul>
       </div>
 
@@ -838,15 +718,15 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
         <p class="tl-role">Mechanical Design Engineer &mdash; Power Products (Global Supply Chain)</p>
         <p class="tl-org">Schneider Electric &middot; Columbia, SC</p>
         <ul class="tl-buls">
-          <li>Designed custom power distribution units per client spec; applied first-principles problem solving and DFM to eliminate production bottlenecks.</li>
-          <li>Established engineering-to-manufacturing feedback loops across factory floor teams, resolving recurring quality issues with end-to-end ownership.</li>
+          <li>Designed custom power distribution units to customer specifications, with manufacturability in mind.</li>
+          <li>Set up feedback between engineering and the factory floor to fix recurring quality issues.</li>
         </ul>
       </div>
 
       <div class="tl edu fade">
         <p class="tl-period">August 2021 &mdash; May 2025</p>
         <p class="tl-role">M.Eng. &mdash; Additive Manufacturing and Design</p>
-        <p class="tl-org">Pennsylvania State University (World Campus) &middot; University Park, PA</p>
+        <p class="tl-org">Pennsylvania State University (World Campus)</p>
         <span class="edu-badge">Graduate</span>
       </div>
 
@@ -857,6 +737,7 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
         <span class="edu-badge">Undergraduate</span>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -864,75 +745,38 @@ footer{padding:2.75rem var(--px);display:flex;align-items:center;justify-content
 <section id="skills">
   <div class="wrap">
     <div class="sec-bar fade">
-      <span class="sec-eye">03 &mdash; Skills</span>
       <div class="sec-rule"></div>
     </div>
-    <h2 class="sec-title fade" data-d="1">From GPU inference to enterprise quota.</h2>
+    <h2 class="sec-title fade" data-d="1">Skills</h2>
     <div class="skills-grid">
       <div class="sg fade" data-d="1">
-        <p class="sg-lbl">Languages &amp; Frameworks</p>
-        <ul class="sg-items">
-          <li>Python (FastAPI, pytest)</li>
-          <li>JavaScript (vanilla, React)</li>
-          <li>SQL &mdash; PostgreSQL, RLS policy design</li>
-          <li>HTML / CSS</li>
-          <li>Bash / shell scripting</li>
-        </ul>
+        <p class="sg-lbl">Comparing options</p>
+        <p class="sg-txt">Tested AI models for ID.ai. Evaluate sales tools at Schneider Electric.</p>
       </div>
       <div class="sg fade" data-d="2">
-        <p class="sg-lbl">ML &amp; Audio</p>
-        <ul class="sg-items">
-          <li>CLAP embeddings (512-dim)</li>
-          <li>Mel-Band Roformer</li>
-          <li>Demucs (htdemucs_ft / 6s)</li>
-          <li>Chromaprint &mdash; acoustic fingerprinting</li>
-          <li>RandomForest classifier (sklearn)</li>
-          <li>audio-separator &mdash; Modal.com GPU</li>
-        </ul>
+        <p class="sg-lbl">Turning data into action</p>
+        <p class="sg-txt">Lead lists from market data. Tableau dashboards for pipeline and forecasting.</p>
       </div>
       <div class="sg fade" data-d="3">
-        <p class="sg-lbl">Infrastructure &amp; Testing</p>
-        <ul class="sg-items">
-          <li>Railway &mdash; FastAPI deployment</li>
-          <li>Netlify &mdash; static hosting + CSP</li>
-          <li>Supabase &mdash; auth, DB, storage</li>
-          <li>Stripe &mdash; billing, HMAC webhooks</li>
-          <li>GitHub Actions &mdash; CI/CD</li>
-          <li>Playwright / axe-core</li>
-        </ul>
+        <p class="sg-lbl">Finding problems early</p>
+        <p class="sg-txt">Security fix in I.D. Automated tests in ID.ai. Root-cause fixes on the factory floor.</p>
       </div>
       <div class="sg fade" data-d="1">
-        <p class="sg-lbl">Enterprise &amp; GTM</p>
-        <ul class="sg-items">
-          <li>Enterprise B2B outbound hunting</li>
-          <li>Full-cycle deal execution</li>
-          <li>Salesforce (bFO) &middot; Tableau</li>
-          <li>AI Agents &mdash; Claude Cowork</li>
-          <li>Microsoft Copilot</li>
-          <li>Pipeline forecasting &amp; analytics</li>
-        </ul>
+        <p class="sg-lbl">Working across teams</p>
+        <p class="sg-txt">Engineering-to-factory feedback. Seller feedback to product teams.</p>
       </div>
       <div class="sg fade" data-d="2">
-        <p class="sg-lbl">Engineering</p>
-        <ul class="sg-items">
-          <li>Mechanical design (power distribution)</li>
-          <li>Design for Manufacturability</li>
-          <li>Additive manufacturing (M.Eng.)</li>
-          <li>First-principles problem solving</li>
-          <li>Cross-functional systems ownership</li>
-        </ul>
+        <p class="sg-lbl">Selling complex deals</p>
+        <p class="sg-txt">$30M quota at 120%. $93.4M and $107.4M quotas at 100%+. An $8M+ deal.</p>
       </div>
       <div class="sg fade" data-d="3">
-        <p class="sg-lbl">Security &amp; Accessibility</p>
-        <ul class="sg-items">
-          <li>JWT entitlement patterns</li>
-          <li>Supabase RLS policy authoring</li>
-          <li>HMAC webhook verification</li>
-          <li>WCAG 2.1 AA compliance</li>
-          <li>XSS prevention (escHtml)</li>
-          <li>Content Security Policy</li>
-        </ul>
+        <p class="sg-lbl">Automating routine work</p>
+        <p class="sg-txt">AI agents and Copilot for RFQ tracking and project monitoring.</p>
       </div>
+    </div>
+    <div class="tools fade">
+      <p class="sc-lbl">Tools</p>
+      <div class="chips"><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">SQL</span><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">Supabase</span><span class="chip">Stripe</span><span class="chip">Salesforce (bFO)</span><span class="chip">Tableau</span><span class="chip">Claude Cowork</span><span class="chip">Microsoft Copilot</span><span class="chip">GovSpend</span><span class="chip">Citylitics</span><span class="chip">Sailebot</span><span class="chip">SE Advantage</span><span class="chip">Mechanical design</span><span class="chip">Design for manufacturability</span><span class="chip">Additive manufacturing</span></div>
     </div>
   </div>
 </section>
